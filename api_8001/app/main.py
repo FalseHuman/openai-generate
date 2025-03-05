@@ -2,6 +2,7 @@ from fastapi import FastAPI, HTTPException
 from openai import OpenAI, RateLimitError, APIError
 import time
 import os
+from pydantic import BaseModel
 from dotenv import load_dotenv
 
 # Загружаем переменные окружения из .env
@@ -47,14 +48,28 @@ def generate_text(prompt: str, max_retries: int = 3, delay: int = 5):
                 raise HTTPException(status_code=500, detail="Internal Server Error")
     return None
 
-# Эндпоинт для генерации текста
+class PromptRequest(BaseModel):
+    prompt: str
+
 @app.post("/generate-text/")
-async def generate_text_endpoint(prompt: str):
-    result = generate_text(prompt)
-    if result:
-        return {"result": result}
-    else:
-        raise HTTPException(status_code=500, detail="Failed to generate text")
+async def generate_text_endpoint(request: PromptRequest):
+    try:
+        # Извлекаем prompt из тела запроса
+        prompt = request.prompt
+
+        # Генерация текста
+        result = generate_text(prompt)
+
+        # Возвращаем результат
+        if result:
+            return {"result": result}
+        else:
+            raise HTTPException(status_code=500, detail="Failed to generate text")
+
+    except Exception as e:
+        # Логируем ошибку
+        print(f"Error: {e}")
+        raise HTTPException(status_code=500, detail="Internal Server Error")
 
 # Корневой эндпоинт
 @app.get("/")
