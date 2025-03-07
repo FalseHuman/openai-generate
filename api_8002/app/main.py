@@ -16,7 +16,7 @@ sdk = YCloudML(
 )
 
 # Выбор модели и настройка параметров
-model = sdk.models.completions("llama", model_version="latest").configure(
+model = sdk.models.completions("yandexgpt", model_version="latest").configure(
     temperature=0.3,  # Параметр "творчества"
     max_tokens=500  # Максимальное количество токенов в ответе
 )
