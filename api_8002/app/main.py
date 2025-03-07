@@ -35,7 +35,7 @@ async def generate_text_endpoint(request: PromptRequest):
 
         # Возвращаем результат
         if result:
-            return {"result": result[0]['text']}
+            return {"result": result[0].text}
         else:
             raise HTTPException(status_code=500, detail="Failed to generate text")
 
