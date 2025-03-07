@@ -20,3 +20,13 @@ services:
     restart: unless-stopped
     env_file:
       - ./api_8001/.env
+  
+  api_8002:
+    build:
+      context: ./api_8002
+    ports:
+      - "8002:8002"
+    container_name: fastapi_8002
+    restart: unless-stopped
+    env_file:
+      - ./api_8002/.env
